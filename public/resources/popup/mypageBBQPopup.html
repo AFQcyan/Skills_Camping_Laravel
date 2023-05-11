@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>바비큐 서비스 주문</title>
+    <link rel="stylesheet" href="./resources/fontawesome-free-6.2.0-web/css/all.min.css">
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <div id="bbq-popup">
+        <h1>주문하기</h1>
+        <div class="order-line">
+            <select data-idx="8">
+            <option data-idx = '0' selected>- 돼지고기 바비큐 세트 : 1인분 12,000 원</option>
+            <option data-idx = '1'>- 해산물 바비큐 세트 : 1인분 15,000 원</option>
+            <option data-idx = '2'>- 음료 : 1병 3,000 원</option>
+            <option data-idx = '3'>- 주류 : 1병 5,000 원</option>
+            <option data-idx = '4'>- 과자 세트 : 1세트(3종) 4,000 원</option>
+            </select>
+            <div>
+                <input type="number" id="amount" min="0"> <p>인분</p>
+                <div>
+                <button class="add-btn title-btn">추가</button>
+
+                </div>
+            </div>
+        </div>
+
+    
+        <h1>주문목록</h1>
+        <table id="list">
+            <thead>
+                <tr>
+                    <th>메뉴</th>
+                    <th>수량</th>
+                    <th>소계금액</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>바비큐 도구 대여 여부</th>
+                    <th><span>대여 금액</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="borrow-row">
+                    <td>
+                        대여여부 : <input type="checkbox" name="borrow" id="borrow">
+                    </td>
+                    <td>
+                        <span>0</span>원
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    
+        <h3>주문합계금액: <span id="price">0</span>원</h3>
+    
+        <button id="order-btn">주문완료</button>
+    </div>
+</body>
+</html>

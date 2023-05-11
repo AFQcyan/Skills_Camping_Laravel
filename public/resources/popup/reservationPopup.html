@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/fontawesome-free-6.2.0-web/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <title>예약정보 입력</title>
+</head>
+
+<body>
+    <div id="reserv-form">
+        <h1 id="space-name">정보를 불러오는 중입니다.</h1>
+        <h2 id="price">정보를 불러오는 중엔 이벤트가 실행되지 않습니다.</h2>
+        <h2 id="date"></h2>
+        <p>
+            이름 <input type="text" name="name" placeholder="이름을 입력해주세요">
+        </p>
+        <p>
+            휴대폰번호 <input type="text" name="phone" placeholder="휴대폰 번호를 입력해주세요">
+        </p>
+
+        <p>
+            <button id="code-request-btn" class="title-btn">인증번호요청</button><br>
+            인증번호 입력란<input disabled type="text" name="code" placeholder="인증코드를 입력해주세요">
+        </p>
+
+        <p>
+            <button id="reservation-btn" class="title-btn">예약하기</button>
+        </p>
+        <div class="modal fade" id="myModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1>예약완료 메시지</h1>
+                    </div>
+                    <div class="modal-body">
+                        <p>예약정보가 정상 등록되었습니다. 관리자 승인 후 예약이 최종 완료됩니다.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
