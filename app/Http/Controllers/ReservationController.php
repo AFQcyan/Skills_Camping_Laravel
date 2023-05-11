@@ -18,7 +18,7 @@ class ReservationController extends Controller
 
         header("Content-type: application/json");
         $output = [];
-        $output['reservation'] = ReservModel::all();
+        $output['reservation'] = ReservModel::get();
         $output['serverDate'] = date("Y-m-d", time());
         echo json_encode($output);
     }
@@ -43,7 +43,7 @@ class ReservationController extends Controller
         $place = $json_data['place'];
         dd($phone);
 
-        $complList = ReservModel::select("*")->where('date', '=', '$date', 'and', 'place', '=', '$place')->first();
+        $complList = ReservModel::select("*")->where('date', '=', '$date')->where('place', '=', '$place')->first();
 
         if ($complList) {
             echo "이미 예약이 완료된 자리입니다.";

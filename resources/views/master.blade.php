@@ -1,4 +1,7 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
+<script type="text/javascript">
+    var secure_token = '{{ csrf_token() }}';
+</script>
 @if(session()->has('flash_message'))
 <script>
     var msg = "{{ session('flash_message')}}";
@@ -22,7 +25,7 @@
 <body>
     <header>
         <div class="content between">
-            <a href="index.php" id="logo">
+            <a href="/" id="logo">
                 <img src="./resources/images/logo.png" alt="메인 로고" title="메인 로고">
             </a>
             <div id="navi" class="center">
@@ -32,9 +35,10 @@
                         <li><a href="/reservation">예약하기</a></li>
                         <li><a href="/mypage">마이 페이지</a></li>
                     </ul>
+
                 </nav>
                 <div id="util" class="flex center">
-                    @if (!isset($_SESSION['user']))
+                    @if (!session()->has('user'))
                     <p><button onclick='location.href="/user"'>로그인</button></p>
                     @else
                     <p><button onclick='location.href="/logout"'>로그아웃</button></p>

@@ -424,9 +424,12 @@ class ReservationPopup extends Popup {
                 return
             }
 
+            console.log($('meta[name="csrf-token"]').attr('content'))
+
             const response = await fetch("/reservation", {
                 method: "POST",
                 headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                     "Content-type": "application/json"
                 },
                 body: JSON.stringify({

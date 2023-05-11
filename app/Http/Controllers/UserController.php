@@ -23,7 +23,7 @@ class UserController extends Controller
                 'phone' => $phone,
                 'name' => $name
             ];
-            msgAndGo("관리자로 로그인 되었습니다.", "./manage.php#reserv");
+            return redirect('/manage/reserv')->with('flash_message', '관리자로 로그인 되었습니다.');
         }
 
 
@@ -39,7 +39,7 @@ class UserController extends Controller
             'phone' => $phone,
             'name' => $name
         ];
-
-        return redirect('/mypage')->with('flash_message', '로그인 되었습니다.');
+        $request->session()->put('user', ['phone' => $phone, 'name' => $name]);
+        return redirect('/camp')->with('flash_message', '로그인 되었습니다.');
     }
 }
