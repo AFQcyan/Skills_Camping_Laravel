@@ -26,7 +26,7 @@
     <header>
         <div class="content between">
             <a href="/" id="logo">
-                <img src="./resources/images/logo.png" alt="메인 로고" title="메인 로고">
+                <img src="../resources/images/logo.png" alt="메인 로고" title="메인 로고">
             </a>
             <div id="navi" class="center">
                 <nav>
@@ -44,11 +44,11 @@
                     <p><button onclick='location.href="/logout"'>로그아웃</button></p>
                     @endif
                     <div class="oper">
-                        <button onclick='location.href="/manage/reserv"'>운영관리</button>
+                        <button onclick='location.href="/manage/reserv#reserv"'>운영관리</button>
                         <div class="depth-2 between">
                             <ul class="dep2">
-                                <li><a href="/manage/reserv">예약 관리</a></li>
-                                <li><a href="/manage/order">주문 관리</a></li>
+                                <li><a href="/manage/reserv#reserv">예약 관리</a></li>
+                                <li><a href="/manage/order#order">주문 관리</a></li>
                             </ul>
                         </div>
                     </div>

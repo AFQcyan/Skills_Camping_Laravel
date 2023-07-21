@@ -22,7 +22,7 @@ class ReservationController extends Controller
         $output['serverDate'] = date("Y-m-d", time());
         echo json_encode($output);
     }
-    public function store()
+    public function store(Request $request)
     {
 
         $json_data = json_decode(file_get_contents("php://input"), true, 512, JSON_THROW_ON_ERROR);
@@ -41,21 +41,16 @@ class ReservationController extends Controller
         $name = $json_data['name'];
         $date = $json_data['date'];
         $place = $json_data['place'];
-        dd($phone);
 
-        $complList = ReservModel::select("*")->where('date', '=', '$date')->where('place', '=', '$place')->first();
+        $complList = ReservModel::select("*")->where('date', '=', $date)->where('place', '=', $place)->first();
 
         if ($complList) {
             echo "이미 예약이 완료된 자리입니다.";
             exit;
         }
 
-        $rs = ReservModel::create([$name, $phone, $place, $date]);
+        $rs = ReservModel::create(['name' => $name, 'phone' => $phone, 'place' => $place, 'date' => $date, 'type' => 'ongoing', 'create_date' => date("Y-m-d")]);
         // DB::execute("INSERT INTO reservation (name, phone, date, place, type, create_date) VALUES (?,?,?,?,'ongoing', now())", [$name, $phone, $date, $place]);
-
-        $_SESSION['user'] = [
-            'phone' => $phone,
-            'name' => $name
-        ];
+        $request->session()->put('user', ['phone' => $phone, 'name' => $name]);
     }
 }

@@ -1,4 +1,3 @@
-@extends('master');
 <?php
 
 use \App\Models\Reservation as ReservModel;
@@ -7,16 +6,15 @@ use \App\Models\Order as OrderModel;
 if (!session()->has('user')) {
     return redirect("/user")->with('flash_message', '로그인 후 이용할 수 있습니다.');
 }
+$reservationList = ReservModel::where('phone', '=', session('user')['phone'])->where('name', '=', session('user')['name'])->get();
 
-
-
-$reservationList = ReservModel::get()->where('phone', '=', session('user')['phone'])->where('name', '=', session('user')['name']);
 ?>
+@extends('master');
 @section('content')
 <section class="site-slide">
     <div class="container">
-        <div class="slide-item"><img src="./resources/images/01/image_01 (1).png" alt="slide-img" title="slide-img"></div>
-    </div </section>
+        <div class="slide-item"><img src="../resources/images/01/image_01 (1).png" alt="slide-img" title="slide-img"></div>
+    </div>
 </section>
 <div id="mypage">
     <div class="content">
@@ -40,6 +38,7 @@ $reservationList = ReservModel::get()->where('phone', '=', session('user')['phon
                 </tr>
             </thead>
             <tbody>
+
                 <?php
                 foreach ($reservationList as $resv) {
                     $orderList = OrderModel::get()->where('reservation_id', '=', $resv->id);

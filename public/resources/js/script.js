@@ -182,7 +182,7 @@ class SlideApp {
 
 window.addEventListener('load', () => {
     console.log("B")
-    if (window.location.href.includes('index') || window.location.href == "http://localhost/") {
+    if (window.location.href.includes('index') || window.location.href == "http://localhost:8000/") {
         new SlideApp()
     }
 })
@@ -452,7 +452,7 @@ class ReservationPopup extends Popup {
             setTimeout(() => {
                 myModal.dispose()
                 this.thisWindow.close()
-                window.location.href = "./mypage.php";
+                window.location.href = "/mypage";
             }, 3000);
 
         })
@@ -510,13 +510,11 @@ class MyPageApp {
                 this.myPageDetailPopup.open({ index: reservation.id })
             })
             reservation.reservationCancelBtn.addEventListener('click', () => {
-                window.location.href = `./process_reservation_cancel.php?id=${reservation.id}`
+                window.location.href = `/mypage/delete_resv?id=${reservation.id}`
             })
 
             return reservation
         })
-
-        console.log(this.reservationList)
     }
     saveOrder(index, orderList, tool) {
         this.myPageDetailPopup.saveData(index, orderList, tool, this.reservationList[index].orderCount)
@@ -530,7 +528,7 @@ window.addEventListener('load', () => {
 })
 class MyPageBBQPopup extends Popup {
     constructor(app) {
-        super('./mypageBBQPopup.html', 700, 750)
+        super('../resources/popup/mypageBBQPopup.html', 700, 750)
         this.app = app
     }
 
@@ -589,9 +587,10 @@ class MyPageBBQPopup extends Popup {
         }
         this.isProcessing = true
 
-        const response = await fetch('./process_add_order.php', {
+        const response = await fetch('/mypage', {
             method: 'POST',
             headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                 "Content-Type": "application/json; charset=utf-8"
             },
             body: JSON.stringify({
@@ -606,6 +605,13 @@ class MyPageBBQPopup extends Popup {
                 tool: this.checkbox.checked,
             })
         })
+
+        let str = await response.text()
+
+        if (str != "") {
+            this.thisWindow.alert(str)
+            return
+        }
 
         window.location.reload()
         this.close()
@@ -662,7 +668,7 @@ class MyPageBBQPopup extends Popup {
 
 class MyPageDetailPopup extends Popup {
     constructor() {
-        super('./mypageDetailPopup.html', 1200, 600)
+        super('../resources/popup/mypageDetailPopup.html', 1200, 600)
         this.orderList = {}
     }
 
@@ -746,7 +752,7 @@ class MyPageDetailPopup extends Popup {
     }
 
     async orderCancel(e) {
-        const response = await fetch(`./process_order_cancel.php?id=${e.target.dataset.id}`)
+        const response = await fetch(`/mypage/delete_ord?id=${e.target.dataset.id}`)
         // this.thisWindow.alert('주문취소 되었습니다.')
         this.thisWindow.close()
         window.location.reload()
@@ -773,7 +779,7 @@ class MyPageDetailPopup extends Popup {
     }
 
     async getData(reservationId) {
-        const data = (await $.getJSON('./get_order_data.php'))
+        const data = (await $.getJSON('/mypage/{mypage}'))
         this.orderList = {}
         data.forEach((x) => {
             if (this.orderList[`${x.reservation_id}`]) {
@@ -786,7 +792,7 @@ class MyPageDetailPopup extends Popup {
 }
 class ManagementDetailPopup extends Popup {
     constructor(refreshFunc) {
-        super('./menagementPopupDetail.html', 1050, 650)
+        super('../resources/popup/menagementPopupDetail.html', 1050, 650)
         this.orderList = {}
         this.refreshFunc = refreshFunc
     }
@@ -854,14 +860,14 @@ class ManagementDetailPopup extends Popup {
             `
 
             tr.querySelector('.cancel').addEventListener('click', () => {
-                fetch(`/process_order_manage.php?id=${item.id}&process=cancel`)
+                fetch(`/manage/order/show?id=${item.id}&process=cancel`)
                 item.type = "cancel"
                 this.reset({ index })
                 this.refreshFunc()
             })
 
             tr.querySelector('.complete').addEventListener('click', () => {
-                fetch(`/process_order_manage.php?id=${item.id}&process=complete`)
+                fetch(`/manage/order/show?id=${item.id}&process=complete`)
                 item.type = "complete"
                 this.reset({ index })
                 this.refreshFunc()

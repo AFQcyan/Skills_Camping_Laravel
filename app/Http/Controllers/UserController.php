@@ -23,12 +23,13 @@ class UserController extends Controller
                 'phone' => $phone,
                 'name' => $name
             ];
-            return redirect('/manage/reserv')->with('flash_message', '관리자로 로그인 되었습니다.');
+            $request->session()->put('user', ['phone' => $phone, 'name' => $name]);
+            return redirect('/manage/reserv#reserv')->with('flash_message', '관리자로 로그인 되었습니다.');
         }
 
 
 
-        $complList = ReservModel::get()->where('phone', '=', $phone)->first();
+        $complList = ReservModel::get()->where('phone', '=', $phone)->where('name', '=', $name)->first();
 
         if (!$complList) {
             return back()->with('flash_message', '예약정보가 없습니다.')->withInput();
@@ -40,6 +41,13 @@ class UserController extends Controller
             'name' => $name
         ];
         $request->session()->put('user', ['phone' => $phone, 'name' => $name]);
-        return redirect('/camp')->with('flash_message', '로그인 되었습니다.');
+        return redirect('/mypage')->with('flash_message', '로그인 되었습니다.');
+    }
+    public function logout(Request $request)
+    {
+        if ($request->session()->has('user')) {
+            $request->session()->forget('user');
+        }
+        return redirect('/')->with('flash_message', '로그아웃 되었습니다.');
     }
 }

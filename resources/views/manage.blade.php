@@ -1,11 +1,14 @@
-@extends('master')
 <?php
 
 use \App\Models\Reservation as ReservModel;
 use \App\Models\Order as OrderModel;
 ?>
-
+@extends('master')
 <style>
+    section {
+        display: none;
+    }
+
     section:target {
         display: inline-block;
     }
@@ -20,15 +23,10 @@ use \App\Models\Order as OrderModel;
     }
 </style>
 
-<body>
-    <?php
 
-    if (!session()->has('user')) {
-        redirect('/user')->with('flash_message', '로그인 후 이용할 수 있습니다.');
-    }
-    if ('000-0000-0000' != session('user')['phone'] && '관리자' != session('user')['name']) {
-        redirect('/user')->with('flash_message', '관리자만 이용할 수 있습니다.');
-    }
+<body>
+    @section('content')
+    <?php
 
     $pagenum = 4;
     $startDate = date("Y-m-d", time());
@@ -60,21 +58,21 @@ use \App\Models\Order as OrderModel;
     }
 
 
-    $reservationList = ReservModel::get()->where('date', '>=', $startDate)->where('date', '<=', $endDate);
+    $reservationList = ReservModel::where('date', '>=', $startDate)->where('date', '<=', $endDate)->get();
     ?>
-    @section('content')
+
     <section id="reserv" class='manage'>
         <div class="site-slide">
             <div class="container">
                 <div class="slide-item">
-                    <img src="./resources/images/01/image_01 (1).png" alt="slide-img" title="slide-img">
+                    <img src="../resources/images/01/image_01 (1).png" alt="slide-img" title="slide-img">
                 </div>
             </div>
         </div>
         <div class="content">
             <div class="tabs">
-                <a class="active" href="#reserv">예약관리</a>
-                <a class="" href="#order">주문관리</a>
+                <a class="active" href="/manage/reserv#reserv">예약관리</a>
+                <a class="" href="/manage/order#order">주문관리</a>
             </div>
             <div class="title">
                 <div>예약 관리</div>
@@ -128,8 +126,8 @@ use \App\Models\Order as OrderModel;
                                 <td><?= ($resv->create_date) ?></td>
                                 <td>
                                     <?php if ($resv->type == 'ongoing') : ?>
-                                        <button class="title-btn" onclick='location.href="./process_reservation_manage.php?id=<?= ($resv->id) ?>&process=accept"'>승인</button>
-                                        <button class="title-btn" onclick='location.href="./process_reservation_manage.php?id=<?= ($resv->id) ?>&process=reject"'>취소</button>
+                                        <button class="title-btn" onclick='location.href="/manage/reserv/show?id=<?= ($resv->id) ?>&process=accept"'>승인</button>
+                                        <button class="title-btn" onclick='location.href="/manage/reserv/show?id=<?= ($resv->id) ?>&process=reject"'>취소</button>
                                     <?php else : ?>
                                         이미 승인됨
                                     <?php endif; ?>
@@ -141,16 +139,16 @@ use \App\Models\Order as OrderModel;
                             if ($i < count($reservationList)) {
                             ?>
                                 <tr>
-                                    <td><?= p($reservationList[$i]->date) ?></td>
-                                    <td><?= p($reservationList[$i]->place) ?></td>
-                                    <td><?= p($reservationList[$i]->name) ?></td>
-                                    <td><?= p($reservationList[$i]->phone) ?></td>
-                                    <td><?= p($reservationList[$i]->type == 'ongoing' ? '예약중' : '예약완료') ?></td>
-                                    <td><?= p($reservationList[$i]->create_date) ?></td>
+                                    <td><?= $reservationList[$i]->date ?></td>
+                                    <td><?= $reservationList[$i]->place ?></td>
+                                    <td><?= $reservationList[$i]->name ?></td>
+                                    <td><?= $reservationList[$i]->phone ?></td>
+                                    <td><?= $reservationList[$i]->type == 'ongoing' ? '예약중' : '예약완료' ?></td>
+                                    <td><?= $reservationList[$i]->create_date ?></td>
                                     <td>
                                         <?php if ($reservationList[$i]->type == 'ongoing') : ?>
-                                            <button class="title-btn" onclick='location.href="./process_reservation_manage.php?id=<?= p($reservationList[$i]->id) ?>&process=accept"'>승인</button>
-                                            <button class="title-btn" onclick='location.href="./process_reservation_manage.php?id=<?= p($reservationList[$i]->id) ?>&process=reject"'>취소</button>
+                                            <button class="title-btn" onclick='location.href="/manage/reserv/show?id=<?= ($reservationList[$i]->id) ?>&process=accept"'>승인</button>
+                                            <button class="title-btn" onclick='location.href="/manage/reserv/show?id=<?= ($reservationList[$i]->id) ?>&process=reject"'>취소</button>
                                         <?php else : ?>
                                             이미 승인됨
                                         <?php endif; ?>
@@ -168,21 +166,21 @@ use \App\Models\Order as OrderModel;
                 <?php
                 if ($page != 1) {
                 ?>
-                    <button onclick='location.href=`./manage.php?startdate=<?= $startDate ?>&enddate=<?= $endDate ?>&page=<?= $page - 1 ?>#reserv`'><i class="fa-solid fa-chevron-left"></i></button>
+                    <button onclick='location.href=`/manage/reserv?startdate=<?= $startDate ?>&enddate=<?= $endDate ?>&page=<?= $page - 1 ?>#reserv`'><i class="fa-solid fa-chevron-left"></i></button>
                 <?php
                 }
                 ?>
                 <?php
                 for ($i = 1; $i <= ceil(count($reservationList) / $pagenum); $i++) {
                 ?>
-                    <button class="<?= $page == $i ? 'selected' : '' ?>" onclick='location.href=`./manage.php?startdate=<?= $startDate ?>&enddate=<?= $endDate ?>&page=<?= $i ?>#reserv`'><?= $i ?></button>
+                    <button class="<?= $page == $i ? 'selected' : '' ?>" onclick='location.href=`/manage/reserv?startdate=<?= $startDate ?>&enddate=<?= $endDate ?>&page=<?= $i ?>#reserv`'><?= $i ?></button>
                 <?php
                 }
                 ?>
                 <?php
-                if ($page != ceil(count($rvList) / 4)) {
+                if ($page != ceil(count($reservationList) / 4)) {
                 ?>
-                    <button onclick='location.href=`./manage.php?startdate=<?= $startDate ?>&enddate=<?= $endDate ?>&page=<?= $page + 1 ?>#reserv`'><i class="fa-solid fa-chevron-right"></i></button>
+                    <button onclick='location.href=`/manage/reserv?startdate=<?= $startDate ?>&enddate=<?= $endDate ?>&page=<?= $page + 1 ?>#reserv`'><i class="fa-solid fa-chevron-right"></i></button>
                 <?php
                 }
                 ?>
@@ -195,14 +193,14 @@ use \App\Models\Order as OrderModel;
         <div class="site-slide">
             <div class="container">
                 <div class="slide-item">
-                    <img src="./resources/images/01/image_01 (1).png" alt="slide-img" title="slide-img">
+                    <img src="../resources/images/01/image_01 (1).png" alt="slide-img" title="slide-img">
                 </div>
             </div>
         </div>
         <div class="content">
             <div class="tabs">
-                <a class="" href="#reserv">예약관리</a>
-                <a class="active" href="#order">주문관리</a>
+                <a class="" href="/manage/reserv#reserv">예약관리</a>
+                <a class="active" href="/manage/order#order">주문관리</a>
             </div>
 
             <div class="title">
@@ -215,7 +213,7 @@ use \App\Models\Order as OrderModel;
             $reservation = ReservModel::select("*")->orderBy('id', 'DESC')->get();
             ?>
 
-            <form active="./manage.php#order" method="get" class="date">
+            <form active="/manage/order#order" method="get" class="date">
                 <p>주문일 : <input type="date" name="orderdate" value="<?= isset($_GET['orderdate']) ? $_GET['orderdate'] : '' ?>"></p>
             </form>
 
@@ -248,10 +246,9 @@ use \App\Models\Order as OrderModel;
                 <?= json_encode($reservation) ?>
             </div>
         </div>
-
         <script>
-            if (window.location.href == "http://localhost/manage.php#reserv") {
-                window.location.href = `./manage.php?startdate=${localStorage.getItem('startDate')}&enddate=${localStorage.getItem('endDate')}#reserv`
+            if (window.location.href == "http://localhost:8000/manage/reserv#reserv") {
+                window.location.href = `/manage/reserv?startdate=${localStorage.getItem('startDate')}&enddate=${localStorage.getItem('endDate')}#reserv`
             }
 
             const startDate = document.querySelector('input[name="startdate"]')
@@ -262,10 +259,9 @@ use \App\Models\Order as OrderModel;
                 localStorage.setItem('startDate', startDate.value)
                 localStorage.setItem('endDate', endDate.value)
                 if (localStorage.getItem('startDate') != null && localStorage.getItem('endDate') != null) {
-                    window.location.href = `./manage.php?startdate=${localStorage.getItem('startDate')}&enddate=${localStorage.getItem('endDate')}#reserv`
+                    window.location.href = `/manage/reserv?startdate=${localStorage.getItem('startDate')}&enddate=${localStorage.getItem('endDate')}#reserv`
                 }
             })
-            console.log(localStorage.getItem('startDate'))
 
             let lastDate = null
             const currentReservationList = []
@@ -273,12 +269,12 @@ use \App\Models\Order as OrderModel;
                 setTable(lastDate)
             }
             const popup = new ManagementDetailPopup(refreshFunction)
+            console.log("A")
 
             const order = JSON.parse(document.querySelector('#order-info').innerHTML);
             const reservation = JSON.parse(document.querySelector('#reservation-info').innerHTML);
             let orderDate;
 
-            console.log(order, reservation)
 
             order.forEach((x) => {
                 x.data = JSON.parse(x.json_data)
@@ -370,3 +366,4 @@ use \App\Models\Order as OrderModel;
             }
         </script>
     </section>
+    @endsection
